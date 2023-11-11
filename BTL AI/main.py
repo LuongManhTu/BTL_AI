@@ -331,35 +331,51 @@ def draw_way(xuatPhat, dichDen):
     else:
         if mtdk[y][x] != -2:
             mtdk[x][a] = mtdk[a][x] = mtdk[y][a] = mtdk[a][y] = mtdk[y][x]
+            
         else:
             mtdk[x][a] = mtdk[a][y] = mtdk[x][y]
+            
 
     if t == -1:
         mtdk[z][b] = mtdk[b][z] = dichDen.thuoc_pho
     else:
         if mtdk[t][z] != -2:
             mtdk[z][b] = mtdk[b][z] = mtdk[t][b] = mtdk[b][t] = mtdk[t][z]
+           
         else:
             mtdk[z][b] = mtdk[b][t] = mtdk[z][t]
 
     if x == z and y == t:
         if y == -1:
             if dist(desDi.vi_tri_x, desDi.vi_tri_y, dsn[x].vi_tri_x, dsn[x].vi_tri_y) < dist(desDen.vi_tri_x, desDen.vi_tri_y, dsn[x].vi_tri_x, dsn[x].vi_tri_y):
+                    
                 mtdk[x][b] = mtdk[b][x] = -2
                 mtdk[a][b] = mtdk[b][a] = dichDen.thuoc_pho
             else:
                 mtdk[x][a] = mtdk[a][x] = -2
                 mtdk[a][b] = mtdk[b][a] = dichDen.thuoc_pho
-        else:
-            if mtdk[y][x] != -2:
+        
+               
                 mtdk[a][b] = mtdk[b][a] = mtdk[x][y]
-            else:
+        else:
+            if(mtdk[y][x]==-2):
                 if dist(desDi.vi_tri_x, desDi.vi_tri_y, dsn[x].vi_tri_x, dsn[x].vi_tri_y) < dist(desDen.vi_tri_x, desDen.vi_tri_y, dsn[x].vi_tri_x, dsn[x].vi_tri_y):
                     mtdk[x][b] = mtdk[a][y] = -2
                     mtdk[x][a] = mtdk[a][b] = mtdk[b][y] = mtdk[x][y]
                 else:
                     mtdk[x][a] = mtdk[b][y] = -2
                     mtdk[x][b] = mtdk[b][a] = mtdk[a][y] = mtdk[x][y]
+            else:
+                if dist(desDi.vi_tri_x, desDi.vi_tri_y, dsn[x].vi_tri_x, dsn[x].vi_tri_y) < dist(desDen.vi_tri_x, desDen.vi_tri_y, dsn[x].vi_tri_x, dsn[x].vi_tri_y):
+                    mtdk[x][b] = mtdk[a][y] = mtdk[b][x]=mtdk[y][a] = -2
+                    mtdk[b][a] = mtdk[a][b]  = mtdk[x][y]
+                else:
+                    mtdk[x][a] = mtdk[b][y] = mtdk[a][x]= mtdk[y][b] =  -2
+                    mtdk[b][a] = mtdk[a][b]  = mtdk[x][y]
+    if(y != -1) :
+        mtdk[x][y] = mtdk[y][x] = -2
+    if(t!=-1):
+        mtdk[z][t] = mtdk[t][z] = -2
 
     # apply A*
     path = Astar(mtdk, dsn, 22, 23)

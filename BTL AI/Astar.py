@@ -60,10 +60,18 @@ def Astar(matran_dinhke, danh_sach_node, start, goal):
             return result
 
         for i in range(n):
-            if distance[curnode.index][i] != 0:
-                neibor = diem[i]
-                if neibor not in Open.queue and neibor not in Close:
-                    trace[neibor] = curnode
+            if matran_dinhke[curnode.index][i] != -2  :
+                neibor = Node(i,0,b[i])
+                j= curnode
+                k=-1
+                while(j.index!=start) :
+                    if(j.index == i):
+                       k =100 
+                       break
+                    j =trace[j]
+                if(i== start): k =100
+                if k!= 100:
                     neibor.g = curnode.g + distance[curnode.index][i]
                     neibor.f = neibor.g + neibor.h
+                    trace[neibor] = curnode
                     Open.put(neibor)
