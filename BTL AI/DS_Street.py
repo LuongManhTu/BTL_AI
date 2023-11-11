@@ -23,7 +23,7 @@ def changeCoor(x1, x2):
 
 list_pho = []
 id = 0
-with open('Toan\\Danh_Sach_Pho.txt', 'r', encoding='utf-8') as file:
+with open('BTL AI\Toan\Danh_Sach_Pho.txt', 'r', encoding='utf-8') as file:
     for line in file:
         line = line.strip()
         if line == '***':
@@ -37,7 +37,7 @@ with open('Toan\\Danh_Sach_Pho.txt', 'r', encoding='utf-8') as file:
 
 data = []
 # Doc file Dia diem
-with open('Toan\\Data_DiaDiem.txt', 'r', encoding='utf-8') as file:
+with open('BTL AI\Toan\Data_DiaDiem.txt', 'r', encoding='utf-8') as file:
     for line in file:
         line = line.strip()
         if line == '***':

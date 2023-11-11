@@ -25,7 +25,7 @@ def changeCoor(x1, x2):
 
 # Đọc file và xử lý dữ liệu thành danh sách Node
 danh_sach_node = []
-with open('Toan\\Danh_Sach_Nut.txt', 'r', encoding="utf-8") as file:
+with open('BTL AI\Toan\Danh_Sach_Nut.txt', 'r', encoding="utf-8") as file:
     for line in file:
         if "***" in line:
             break

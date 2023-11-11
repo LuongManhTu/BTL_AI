@@ -7,7 +7,7 @@ for i in range(rows):
     for j in range(cols):
        matran_dinhke[i][j] = -2
 
-with open('Toan\\Danh_Sach_Dinh_Ke.txt', 'r', encoding='utf-8') as file:
+with open('BTL AI\Toan\Danh_Sach_Dinh_Ke.txt', 'r', encoding='utf-8') as file:
     for line in file:
         line = line.strip()
         if line == '***':
