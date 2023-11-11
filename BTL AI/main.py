@@ -289,7 +289,7 @@ def draw_way(xuatPhat, dichDen):
         draw_dotted_line(chDi, q1, 5, 5, 'blue')
         graph.draw_circle(q1, 3, fill_color='blue',
                             line_color='blue', line_width=3)
-        linee = "- Đi bộ ra " + Xuatphat.address
+        linee = "- Đi bộ ra " + xuatPhat.address
         directionList.append(linee)
         directionLines += linee + "\n"
         window["-Direction-"].update(directionLines)
@@ -448,137 +448,7 @@ def draw_way(xuatPhat, dichDen):
         
 
 
-    # for i in range(len(path)-1):
-        
-
-    #     # left-right orientation
-    #     ngaRe = ""
-    #     # node 22 - first node in path list
-    #     if i == 0:
-    #         for j in range(len(path)-2):
-    #             if path[j-1] == 0 and path[j] == 2:
-    #                 ngaRe = "Phố Phan Đình Phùng, Phố Hàng Cót"
-    #                 break
-    #             else:
-    #                 cur = (dsn[path[j]].vi_tri_x, dsn[path[j]].vi_tri_y) # current node
-    #                 nex = (dsn[path[j+1]].vi_tri_x, dsn[path[j+1]].vi_tri_y) # next node
-    #                 nexx = (dsn[path[j+2]].vi_tri_x, dsn[path[j+2]].vi_tri_y) # next next node
-    #                 ori = orientation(cur, nex, nexx)
-    #                 if ori == 1 or ori == 2:
-    #                     break 
-    #         if j != len(path)-2:   
-    #             for pho in dsn[path[j+1]].danh_sach_duong:
-    #                 ngaRe += pho.ten_pho + ", "
-    #             linee = "- Đi thẳng đến ngã rẽ " + ngaRe.rstrip(", ")
-    #             directionList.append(linee)
-    #             directionLines += linee + "\n"
-    #             window["-Direction-"].update(directionLines)
-    #         # node 23 doesnt have danh_sach_duong
-    #         else:
-    #             linee = "- Đi thẳng theo " + \
-    #                 findPho(dsn[path[j]], dsn[path[j+1]])
-    #             directionList.append(linee)
-    #             directionLines += linee + "\n"
-    #             window["-Direction-"].update(directionLines)
-                
-    #     # node before 23 in path list
-    #     if i == len(path)-2:
-    #         pre = (dsn[path[i-1]].vi_tri_x, dsn[path[i-1]].vi_tri_y) # previous node 
-    #         cur = (dsn[path[i]].vi_tri_x, dsn[path[i]].vi_tri_y) # current node
-    #         nex = (dsn[path[i+1]].vi_tri_x, dsn[path[i+1]].vi_tri_y) # next node
-            
-    #         # orientation: 1 left - 2 right - 0 straight
-    #         ori = orientation(pre, cur, nex)
-    #         if ori == 1:
-    #             linee = "- Rẽ trái vào " + list_pho[dichDen.thuoc_pho].ten_pho
-    #             directionList.append(linee)
-    #             directionLines += linee + "\n"
-    #             window["-Direction-"].update(directionLines)
-    #         elif ori == 2:
-    #             linee = "- Rẽ phải vào " + list_pho[dichDen.thuoc_pho].ten_pho
-    #             directionList.append(linee)
-    #             directionLines += linee + "\n"
-    #             window["-Direction-"].update(directionLines)
-    #         else:
-    #             linee = "- Đi thẳng theo " + \
-    #                 list_pho[dichDen.thuoc_pho].ten_pho
-    #             directionList.append(linee)
-    #             directionLines += linee + "\n"
-    #             window["-Direction-"].update(directionLines)
-            
-    #     # nodes between 22 and 23
-    #     if 0 < i < len(path)-2:
-    #         if path[i] == 0 and path[i+1] == 2:
-    #             linee = "- Đi thẳng Phố Hàng Đậu, vòng qua Phố Thánh Quán, quay về Phố Phan Đình Phùng"
-    #             directionList.append(linee)
-    #             directionLines += linee + "\n"
-    #             window["-Direction-"].update(directionLines)
-    #         else:    
-    #             pre = (dsn[path[i-1]].vi_tri_x, dsn[path[i-1]].vi_tri_y) # previous node 
-    #             cur = (dsn[path[i]].vi_tri_x, dsn[path[i]].vi_tri_y) # current node
-    #             nex = (dsn[path[i+1]].vi_tri_x, dsn[path[i+1]].vi_tri_y) # next node
-                
-    #             #orientation: 1 left - 2 right - 0 straight
-    #             ori = orientation(pre, cur, nex)
-    #             if ori == 1:
-    #                 linee = "- Rẽ trái vào " + \
-    #                     findPho(dsn[path[i]], dsn[path[i+1]])
-    #                 directionList.append(linee)
-    #                 directionLines += linee + "\n"
-    #                 window["-Direction-"].update(directionLines)
-                    
-    #             elif ori == 2:
-    #                 linee = "- Rẽ phải vào " + findPho(dsn[path[i]], dsn[path[i+1]])
-    #                 directionList.append(linee)
-    #                 directionLines += linee + "\n"
-    #                 window["-Direction-"].update(directionLines)
-                    
-    #             else:
-    #                 if "Đi thẳng đến ngã rẽ" not in directionList[len(directionList)-1]:
-    #                     for j in range(i, len(path)-2):
-    #                         if path[j] == 0 and path[j+1] == 2:
-    #                             ngaRe = "Phố Phan Đình Phùng, Phố Hàng Cót"
-    #                         else:
-    #                             cur = (dsn[path[j]].vi_tri_x, dsn[path[j]].vi_tri_y)
-    #                             nex = (dsn[path[j+1]].vi_tri_x, dsn[path[j+1]].vi_tri_y)
-    #                             nexx = (dsn[path[j+2]].vi_tri_x, dsn[path[j+2]].vi_tri_y)
-    #                             ori = orientation(cur, nex, nexx)
-    #                             if ori == 1 or ori == 2:
-    #                                 break
-                            
-    #                     if j != len(path)-2:     
-    #                         for pho in dsn[path[j+1]].danh_sach_duong:
-    #                             ngaRe += pho.ten_pho + ", "   
-    #                         linee = "- Đi thẳng đến ngã rẽ " + ngaRe.rstrip(", ")
-    #                         directionList.append(linee)
-    #                         directionLines += linee + "\n"
-    #                         window["-Direction-"].update(directionLines)
-    #                     # node 23 doesnt have danh_sach_duong
-    #                     else:
-    #                         linee = "- Đi thẳng theo " + \
-    #                         findPho(dsn[path[j]], dsn[path[j+1]])
-    #                         directionList.append(linee)
-    #                         directionLines += linee + "\n"
-    #                         window["-Direction-"].update(directionLines)
-                
-
     
-    #     # delay 1s
-    #     if(i<len(path)-3):
-
-    #         pre = (dsn[path[i]].vi_tri_x, dsn[path[i-1]].vi_tri_y) # previous node 
-    #         cur = (dsn[path[i+1]].vi_tri_x, dsn[path[i]].vi_tri_y) # current node
-    #         nex = (dsn[path[i+2]].vi_tri_x, dsn[path[i+1]].vi_tri_y) # next node
-    #         pre1 = (dsn[path[i+1]].vi_tri_x, dsn[path[i-1]].vi_tri_y) # previous node 
-    #         cur1 = (dsn[path[i+2]].vi_tri_x, dsn[path[i]].vi_tri_y) # current node
-    #         nex1 = (dsn[path[i+3]].vi_tri_x, dsn[path[i+1]].vi_tri_y) # next node
-    #         ori = orientation(pre, cur, nex)
-    #         ori1 = orientation(pre1, cur1, nex1)
-    #         if(ori !=0 or ori1 !=0):
-    #             window.refresh()
-    #             time.sleep(1)
-        
-        
     # draw end point
     # comboDi, comboDen
     if buttonChooseDi == 0 and buttonChooseDen == 0:
