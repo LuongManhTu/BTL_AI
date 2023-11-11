@@ -443,7 +443,7 @@ def draw_way(xuatPhat, dichDen):
     
     i= len(p)-1
     ve((p[i][0],p[i][1]),dsn,mtdk,directionLines)
-    if(p[i-1][2]!=0): li += "Đi thẳng " + list_pho[mtdk[p[i][0]][p[i][1]]].ten_pho +" đến "
+    if(p[i-1][2]!=0 or mtdk[p[i][0]][p[i][1]] != mtdk[p[i-1][0]][p[i-1][1]]): li += "Đi thẳng " + list_pho[mtdk[p[i][0]][p[i][1]]].ten_pho +" đến "
     li +=  dichDen.address
     window["-Direction-"].update(li)
     window.refresh()
