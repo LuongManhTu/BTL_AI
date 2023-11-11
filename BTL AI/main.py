@@ -289,7 +289,7 @@ def draw_way(xuatPhat, dichDen):
         draw_dotted_line(chDi, q1, 5, 5, 'blue')
         graph.draw_circle(q1, 3, fill_color='blue',
                             line_color='blue', line_width=3)
-        linee = "- Đi bộ ra " + Xuatphat.address
+        linee = "- Đi bộ ra " + xuatPhat.address
         directionList.append(linee)
         directionLines += linee + "\n"
         window["-Direction-"].update(directionLines)
