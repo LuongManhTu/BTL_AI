@@ -152,4 +152,15 @@ Quán Cơm 111 Phùng Hưng | 1045 2645 | SỐ 111, Phố Phùng Hưng | 20 18
 18
 Halong Lapinta Cruise | 880 2730 | Số 11, Ngõ Hàng Hương | 20 21
 UnknownHH | 785 2710 | Số 16, Ngõ Hàng Hương | 20 21
+*
+10
+UnknownHK | 2125 1387 | Số 83, Phố Hàng Khoai | 11 -1
+*
+3
+Bò nướng 1A Gầm Cầu | 1875 885 | Số 1A, Phố Gầm Cầu | 5 -1
+Bún ốc nguội | 1766 929 | Số 3, Phố Gầm Cầu | 5 -1
+*
+12
+UnknownHM | 2621 1940 | Số 18, Phố Hàng Mã | 13 -1
+UnknownHM | 2484 1962 | Số 27, Phố Hàng Mã | 13 -1
 ***

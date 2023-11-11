@@ -191,7 +191,7 @@ def orientation(A, B, C):
     dot_product = v1[0] * v2[0] + v1[1] * v2[1]
     cos_angle = dot_product / (length1 * length2)
     angle = math.acos(cos_angle)*180/(math.pi)
-    if 25 < angle < 155:
+    if 35 < angle < 170:
         cross_product = v1[0] * v2[1] - v1[1] * v2[0]
         if cross_product > 0:
             return 1
@@ -388,7 +388,7 @@ def draw_way(xuatPhat, dichDen):
         if(p[i][0]!=0 or p[i][1]!=2):
             
             li += "Đi thẳng "+ list_pho[mtdk[p[i][0]][p[i][1]]].ten_pho +" đến "
-            while(p[i][2]==0):
+            while(p[i][2]==0 and mtdk[p[i][0]][p[i][1]] == mtdk[p[i+1][0]][p[i+1][1]] ):
                 ve((p[i][0],p[i][1]),dsn,mtdk,li)
                 i +=1
             if i<len(p)-1:
@@ -421,7 +421,7 @@ def draw_way(xuatPhat, dichDen):
                             window["-Direction-"].update(li)
                             window.refresh()
                             time.sleep(1)
-                else:
+                elif(p[i][2]!=0):
                     ve((p[i][0],p[i][1]),dsn,mtdk,li)
                     li += "ngã rẽ "+ lay_duong(dsn[p[i][1]])+"\n"
                     if(p[i][2]==1):
@@ -431,6 +431,14 @@ def draw_way(xuatPhat, dichDen):
                     window["-Direction-"].update(li)
                     window.refresh()
                     time.sleep(1)
+                else:
+                    ve((p[i][0],p[i][1]),dsn,mtdk,li)
+                    li += "ngã rẽ "+ lay_duong(dsn[p[i][1]])+"\n"
+                    li += "Đi thẳng  vào " +list_pho[mtdk[p[i+1][0]][p[i+1][1]]].ten_pho +  "\n"
+                    window["-Direction-"].update(li)
+                    window.refresh()
+                    time.sleep(1)
+
         i +=1
     
     i= len(p)-1

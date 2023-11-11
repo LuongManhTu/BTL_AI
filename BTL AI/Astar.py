@@ -29,8 +29,12 @@ def Astar(matran_dinhke, danh_sach_node, start, goal):
         for j in range(n):
             distance[i][j] = 0
             if matran_dinhke[i][j] != -2:
-                distance[i][j] = math.sqrt((danh_sach_node[i].vi_tri_x - danh_sach_node[j].vi_tri_x) ** 2 + (
-                    danh_sach_node[i].vi_tri_y - danh_sach_node[j].vi_tri_y) ** 2)
+                if(i!=0 or j !=2):
+                    distance[i][j] = math.sqrt((danh_sach_node[i].vi_tri_x - danh_sach_node[j].vi_tri_x) ** 2 + (
+                        danh_sach_node[i].vi_tri_y - danh_sach_node[j].vi_tri_y) ** 2)
+                else:
+                    distance[i][j] = math.sqrt((danh_sach_node[i].vi_tri_x - danh_sach_node[j].vi_tri_x) ** 2 + (
+                        danh_sach_node[i].vi_tri_y - danh_sach_node[j].vi_tri_y) ** 2)*2+ 100
 
     trace = {}
     diem = [Node(i, 0, b[i]) for i in range(n)]
