@@ -354,9 +354,6 @@ def draw_way(xuatPhat, dichDen):
             else:
                 mtdk[x][a] = mtdk[a][x] = -2
                 mtdk[a][b] = mtdk[b][a] = dichDen.thuoc_pho
-        
-               
-                mtdk[a][b] = mtdk[b][a] = mtdk[x][y]
         else:
             if(mtdk[y][x]==-2):
                 if dist(desDi.vi_tri_x, desDi.vi_tri_y, dsn[x].vi_tri_x, dsn[x].vi_tri_y) < dist(desDen.vi_tri_x, desDen.vi_tri_y, dsn[x].vi_tri_x, dsn[x].vi_tri_y):

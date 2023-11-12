@@ -46,32 +46,35 @@ def Astar(matran_dinhke, danh_sach_node, start, goal):
     while not Open.empty():
 
         curnode = Open.get()
-        Close.append(curnode)
+        Close.append(curnode.index)
 
         if curnode.index == goal:
 
-            u = curnode
+            u = curnode.index
 
-            while u.index != start:
-                result.append(u.index)
+            while u != start:
+                result.append(u)
                 u = trace[u]
-            result.append(u.index)
+            result.append(u)
             result.reverse()
             return result
 
         for i in range(n):
             if matran_dinhke[curnode.index][i] != -2  :
-                neibor = Node(i,0,b[i])
-                j= curnode
-                k=-1
-                while(j.index!=start) :
-                    if(j.index == i):
-                       k =100 
-                       break
-                    j =trace[j]
-                if(i== start): k =100
-                if k!= 100:
-                    neibor.g = curnode.g + distance[curnode.index][i]
-                    neibor.f = neibor.g + neibor.h
-                    trace[neibor] = curnode
-                    Open.put(neibor)
+                if i not in Close :
+                    k =0
+                    neibor = Node(i,curnode.g+distance[curnode.index][i],b[i])
+                    for no in Open.queue:
+                        if no.index == i: 
+                            if no.f > neibor.f : 
+                                no.g = neibor.g
+                                no.h = neibor.h
+                                no.f = neibor.f
+                                trace[no.index] = curnode.index
+                                k=1
+                    if(k==0):
+                        Open.put(neibor)
+                        trace[neibor.index] = curnode.index
+                
+                    
+                   
