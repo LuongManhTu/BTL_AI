@@ -17,6 +17,8 @@ import math
 
 
 ##################         Set up           ###################
+
+
 # variables
 sg.set_options(font=("Arial Bold", 10))
 mapsize = 750
@@ -196,7 +198,7 @@ def orientation(A, B, C):
     dot_product = v1[0] * v2[0] + v1[1] * v2[1]
     cos_angle = dot_product / (length1 * length2)
     angle = math.acos(cos_angle)*180/(math.pi)
-    if 35 < angle < 170:
+    if 28 < angle < 170:
         cross_product = v1[0] * v2[1] - v1[1] * v2[0]
         if cross_product > 0:
             return 1
@@ -401,12 +403,12 @@ def draw_way(xuatPhat, dichDen):
                         li += "- Rẽ phải vào phố Hàng Đậu\n"
                         window["-Direction-"].update(li)
                         
-                        window.refresh()
-                        time.sleep(1)
-                        
                         whitep = (dsn[p[i][1]].vi_tri_x, dsn[p[i][1]].vi_tri_y)
                         graph.draw_circle(whitep, 4, fill_color='blue',
                                           line_color='blue', line_width=3)
+                        
+                        window.refresh()
+                        time.sleep(1)
                         
                         li += "- Đi thẳng phố Hàng Đậu đến ngã rẽ phố Hàng Than phố Hàng Đậu\n"
                         li = ve((p[i+1][0],p[i+1][1]), dsn, mtdk, li)
@@ -415,14 +417,14 @@ def draw_way(xuatPhat, dichDen):
                             li += "- Đi thẳng phố Phan Đình Phùng đến ngã rẽ phố Lý Nam Đế phố Phan Đình Phùng\n" 
                             li += "- Rẽ phải vào phố Lý Nam Đế \n"
                             window["-Direction-"].update(li)
-                            
-                            window.refresh()
-                            time.sleep(1)
-                            
+       
                             whitep = (dsn[p[i+2][0]].vi_tri_x,
                                       dsn[p[i+2][0]].vi_tri_y)
                             graph.draw_circle(whitep, 4, fill_color='blue',
                                               line_color='blue', line_width=3)
+                            
+                            window.refresh()
+                            time.sleep(1)
                             
                     else:
                         window.refresh()
@@ -434,14 +436,15 @@ def draw_way(xuatPhat, dichDen):
                             li += "- Đi thẳng phố Phan Đình Phùng đến ngã rẽ phố Lý Nam Đế phố Phan Đình Phùng\n" 
                             li += "- Rẽ phải vào phố Lý Nam Đế \n"
                             window["-Direction-"].update(li)
-                            
-                            window.refresh()
-                            time.sleep(1)
-                            
+
                             whitep = (dsn[p[i+2][0]].vi_tri_x,
                                       dsn[p[i+2][0]].vi_tri_y)
                             graph.draw_circle(whitep, 4, fill_color='blue',
                                               line_color='blue', line_width=3)
+                            
+                            window.refresh()
+                            time.sleep(1)
+
                 elif(p[i][2]!=0):
                     ve((p[i][0],p[i][1]),dsn,mtdk,li)
                     li += "ngã rẽ "+ lay_duong(dsn[p[i][1]])+"\n"
@@ -450,23 +453,25 @@ def draw_way(xuatPhat, dichDen):
                     else: 
                         li += "- Rẽ phải vào " +list_pho[mtdk[p[i+1][0]][p[i+1][1]]].ten_pho +  "\n"
                     window["-Direction-"].update(li)
-                    window.refresh()
-                    time.sleep(1)
                     
                     whitep = (dsn[p[i+1][0]].vi_tri_x, dsn[p[i+1][0]].vi_tri_y)
-                    graph.draw_circle(whitep, 4, fill_color='blue',
-                                          line_color='blue', line_width=3)
+                    graph.draw_circle(whitep, 4, fill_color='blue', line_color='blue', line_width=3)
+                    
+                    window.refresh()
+                    time.sleep(1)
+                            
                 else:
                     ve((p[i][0],p[i][1]),dsn,mtdk,li)
                     li += "ngã rẽ "+ lay_duong(dsn[p[i][1]])+"\n"
                     li += "- Đi thẳng vào " +list_pho[mtdk[p[i+1][0]][p[i+1][1]]].ten_pho +  "\n"
                     window["-Direction-"].update(li)
-                    window.refresh()
-                    time.sleep(1)
                     
                     whitep = (dsn[p[i+1][0]].vi_tri_x, dsn[p[i+1][0]].vi_tri_y)
-                    graph.draw_circle(whitep, 4, fill_color='blue',
-                                          line_color='blue', line_width=3)
+                    graph.draw_circle(whitep, 4, fill_color='blue', line_color='blue', line_width=3)
+             
+                    window.refresh()
+                    time.sleep(1)
+                            
 
         i +=1
     
@@ -476,6 +481,9 @@ def draw_way(xuatPhat, dichDen):
     if(p[i-1][2]!=0 or mtdk[p[i][0]][p[i][1]] != mtdk[p[i-1][0]][p[i-1][1]]): li += "- Đi thẳng " + list_pho[mtdk[p[i][0]][p[i][1]]].ten_pho +" đến "
     li +=  dichDen.address
     window["-Direction-"].update(li)
+    whitep = (dichDen.vi_tri_x, dichDen.vi_tri_y)
+    graph.draw_circle(whitep, 4, fill_color='blue',
+                      line_color='blue', line_width=3)
     window.refresh()
     time.sleep(1)
     directionLines = li+"\n"
@@ -707,14 +715,22 @@ while True:
             window["-ComboDiaDiemDen-"].update(values=listDes)
             
         case "-ComboDiaDiemDi-":
+            if (buttonChooseDi == 1 or values["-ComboDiaDiemDi-"] != '') and delMap == 1:
+                graph.draw_image(
+                    filename=mapPath, location=(0, mapsize))
             # graph.draw_image(
             #     filename=mapPath, location=(0, mapsize))
             buttonChooseDi = 0
+            window["-Direction-"].update("")
         case "-ComboDiaDiemDen-":
+            if (buttonChooseDen == 1 or values["-ComboDiaDiemDen-"] != '') and delMap == 1:
+                graph.draw_image(
+                    filename=mapPath, location=(0, mapsize))
 
             # graph.draw_image(
             #     filename=mapPath, location=(0, mapsize))
             buttonChooseDen = 0
+            window["-Direction-"].update("")
 
 
         # Choose on map -> nearDi, nearDen
@@ -722,13 +738,15 @@ while True:
             if (buttonChooseDi == 1 or values["-ComboDiaDiemDi-"] != '') and delMap == 1 :
                 graph.draw_image(
                     filename=mapPath, location=(0, mapsize))
-                window["-ComboPhoDi-"].update('')
-                window["-ComboDiaDiemDi-"].update('')
                 
             buttonChooseDi = 1
-            delMap = 1
+            delMap = 0
             window["-ChooseDi-"].update(button_color=('white', 'orange'))
-
+            
+            window["-ComboPhoDi-"].update('')
+            window["-ComboDiaDiemDi-"].update('')
+            window["-Direction-"].update("")
+            
             # get coordinate
             event, values = window.read()
             window["-ChooseDi-"].update(button_color=('white', 'DarkMagenta'))
@@ -754,13 +772,15 @@ while True:
             if (buttonChooseDen == 1 or values["-ComboDiaDiemDen-"] != '') and delMap == 1:
                 graph.draw_image(
                     filename=mapPath, location=(0, mapsize))
-                window["-ComboPhoDen-"].update('')
-                window["-ComboDiaDiemDen-"].update('')
             
             buttonChooseDen = 1
-            delMap = 1
+            delMap = 0
             window["-ChooseDen-"].update(button_color=('white', 'orange'))
 
+            window["-ComboPhoDen-"].update('')
+            window["-ComboDiaDiemDen-"].update('')
+            window["-Direction-"].update("")
+            
             # get coordinate
             event, values = window.read()
             window["-ChooseDen-"].update(button_color=('white', 'DarkMagenta'))
@@ -843,7 +863,7 @@ while True:
                 else:
                     draw_way(nearDi, dichDen)
             
-            # buttonChooseDi = buttonChooseDen = 0
+            buttonChooseDi = buttonChooseDen = 0
             delMap = 1
 
         case "Reset":
