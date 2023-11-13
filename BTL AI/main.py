@@ -259,17 +259,17 @@ def draw_way(xuatPhat, dichDen):
     # draw start point
     # comboDi, comboDen
     if buttonChooseDi == 0 and buttonChooseDen == 0:
-        graph.draw_circle(p1, 4, fill_color=None,
+        graph.draw_circle(p1, 4, fill_color='blue',
                           line_color="Blue", line_width=3)
-        graph.draw_circle(p1, 10, fill_color=None,
+        graph.draw_circle(p1, 8, fill_color=None,
                           line_color="Blue", line_width=3)
         window.refresh()
         time.sleep(1)
     # comboDi, chooseDen
     if buttonChooseDi == 0 and buttonChooseDen == 1:
-        graph.draw_circle(p1, 4, fill_color=None,
+        graph.draw_circle(p1, 4, fill_color='blue',
                           line_color="Blue", line_width=3)
-        graph.draw_circle(p1, 10, fill_color=None,
+        graph.draw_circle(p1, 8, fill_color=None,
                           line_color="Blue", line_width=3)
         window.refresh()
         time.sleep(1)
@@ -679,8 +679,8 @@ while True:
 
         # mutually dependent comboboxes: Pho -> Des
         case "-ComboPhoDi-":
-            graph.draw_image(
-                    filename=mapPath, location=(0, mapsize))
+            # graph.draw_image(
+            #         filename=mapPath, location=(0, mapsize))
             buttonChooseDi = 0
             index = dicStreet[values["-ComboPhoDi-"]]
             listDes = []
@@ -693,8 +693,8 @@ while True:
             window["-ComboDiaDiemDi-"].update(values=listDes)
             
         case "-ComboPhoDen-":
-            graph.draw_image(
-                filename=mapPath, location=(0, mapsize))
+            # graph.draw_image(
+            #     filename=mapPath, location=(0, mapsize))
             buttonChooseDen = 0
             index = dicStreet[values["-ComboPhoDen-"]]
             listDes = []
@@ -706,12 +706,12 @@ while True:
                 listDes.append(line)
             window["-ComboDiaDiemDen-"].update(values=listDes)
         case "-ComboDiaDiemDi-":
-            graph.draw_image(
-                filename=mapPath, location=(0, mapsize))
+            # graph.draw_image(
+            #     filename=mapPath, location=(0, mapsize))
             buttonChooseDi = 0
         case "-ComboDiaDiemDen-":
-            graph.draw_image(
-                filename=mapPath, location=(0, mapsize))
+            # graph.draw_image(
+            #     filename=mapPath, location=(0, mapsize))
             buttonChooseDen = 0
 
 
@@ -737,9 +737,9 @@ while True:
                 if in_hang_ma(x1, x2):
                     # draw start point
                     graph.draw_circle(
-                        chDi, 4, fill_color=None, line_color="Blue", line_width=3)
+                        chDi, 4, fill_color='blue', line_color="Blue", line_width=3)
                     graph.draw_circle(
-                        chDi, 10, fill_color=None, line_color="Blue", line_width=3)
+                        chDi, 8, fill_color=None, line_color="Blue", line_width=3)
                     # Des: nearDi
                     nearDi = nearestDes(x1, x2)
 
@@ -799,9 +799,9 @@ while True:
                 q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
 
                 if q1 == q2:
-                    graph.draw_circle(q1, 4, fill_color=None,
+                    graph.draw_circle(q1, 4, fill_color='blue',
                                       line_color="Blue", line_width=3)
-                    graph.draw_circle(q1, 10, fill_color=None,
+                    graph.draw_circle(q1, 8, fill_color=None,
                                       line_color="Blue", line_width=3)
                     window["-Direction-"].update("ĐÃ ĐẾN!")
                 else:
