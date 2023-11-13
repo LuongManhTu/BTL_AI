@@ -705,11 +705,13 @@ while True:
                     line = d.address
                 listDes.append(line)
             window["-ComboDiaDiemDen-"].update(values=listDes)
+            
         case "-ComboDiaDiemDi-":
             # graph.draw_image(
             #     filename=mapPath, location=(0, mapsize))
             buttonChooseDi = 0
         case "-ComboDiaDiemDen-":
+
             # graph.draw_image(
             #     filename=mapPath, location=(0, mapsize))
             buttonChooseDen = 0
