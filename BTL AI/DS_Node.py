@@ -41,15 +41,3 @@ with open('BTL AI\Toan\Danh_Sach_Nut.txt', 'r', encoding="utf-8") as file:
         nodee = Node(int(data[0]), x1, x2, danh_sach_duong)
         
         danh_sach_node.append(nodee)
-
-
-
-# In thông tin của từng Node trong danh sách
-# for node in danh_sach_node:
-#     print("Tên nút:", node.ten_dinh_nut)
-#     print("Vị trí X:", node.getLocationX())
-#     print("Vị trí Y:", node.getLocationY())
-#     print("Danh sách đường:")
-#     for duong in danh_sach_duong:
-#         print(duong.ten_pho)
-#     print()

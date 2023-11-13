@@ -26,8 +26,3 @@ with open('BTL AI\Toan\Danh_Sach_Dinh_Ke.txt', 'r', encoding='utf-8') as file:
             matran_dinhke[i][j] = matran_dinhke[j][i] = k
         else:
             matran_dinhke[i][j] = k
-
-# for i in range(rows):
-#     for j in range(cols):
-#         print(matran_dinhke[i][j], end=' ')
-#     print()
