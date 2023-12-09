@@ -11,11 +11,6 @@ import time
 import math
 
 
-# Set up: line 16
-# Functions: line 104
-# Event handler: line 625
-
-
 ##################         Set up           ###################
 
 
@@ -30,7 +25,6 @@ delMap = 1
 nearest = nearDi = nearDen = Destinations("Rỗng", 0, 0, "", [], 0)
 chDi = chDen = (0, 0)
 # direction box
-# global directionLines, directionList
 directionList = []
 directionLines = ""
 
@@ -39,7 +33,7 @@ directionLines = ""
 mapPath = "BTL AI\\Pics\\resized.png"
 markerPath = "BTL AI\\Pics\\resized_marker.png"
 
-img = Image.open("BTL AI\\Pics\\HANGMA_GUIcopy.png")
+img = Image.open("BTL AI\\Pics\\Map HangMa.png")
 imm = img.resize((mapsize, mapsize))
 imm.save(mapPath)
 
@@ -271,16 +265,12 @@ def draw_way(xuatPhat, dichDen):
                           line_color="Blue", line_width=3)
         graph.draw_circle(p1, 8, fill_color=None,
                           line_color="Blue", line_width=3)
-        # window.refresh()
-        # time.sleep(1)
     # comboDi, chooseDen
     if buttonChooseDi == 0 and buttonChooseDen == 1:
         graph.draw_circle(p1, 4, fill_color='blue',
                           line_color="Blue", line_width=3)
         graph.draw_circle(p1, 8, fill_color=None,
                           line_color="Blue", line_width=3)
-        # window.refresh()
-        # time.sleep(1)
     # chooseDi, comboDen
     if buttonChooseDi == 1 and buttonChooseDen == 0:
         draw_dotted_line(chDi, q1, 5, 5, 'blue')
@@ -694,6 +684,8 @@ def nearestDes(x1, x2):
 
 
 ##################         Event handler          ###################
+
+
 while True:
     event, values = window.read()
     # print(event, values)
@@ -703,8 +695,6 @@ while True:
 
         # mutually dependent comboboxes: Pho -> Des
         case "-ComboPhoDi-":
-            # graph.draw_image(
-            #         filename=mapPath, location=(0, mapsize))
             buttonChooseDi = 0
             index = dicStreet[values["-ComboPhoDi-"]]
             listDes = []
@@ -717,8 +707,6 @@ while True:
             window["-ComboDiaDiemDi-"].update(values=listDes)
             
         case "-ComboPhoDen-":
-            # graph.draw_image(
-            #     filename=mapPath, location=(0, mapsize))
             buttonChooseDen = 0
             index = dicStreet[values["-ComboPhoDen-"]]
             listDes = []
@@ -884,7 +872,6 @@ while True:
                 else:
                     draw_way(nearDi, dichDen)
             
-            # buttonChooseDi = buttonChooseDen = 0
             delMap = 1
 
         case "Reset":
