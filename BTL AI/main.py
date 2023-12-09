@@ -21,7 +21,7 @@ markersize = 40
 rate = mapsize / float(2928)
 # initial values
 buttonChooseDi = buttonChooseDen = 0
-delMap = 1
+checkReset = 1
 nearest = nearDi = nearDen = Destinations("Rỗng", 0, 0, "", [], 0)
 chDi = chDen = (0, 0)
 # direction box
@@ -144,8 +144,9 @@ def d8(p):  # inside < 0
 # reset everything
 def reset():
     # reset variables
-    global buttonChooseDi, buttonChooseDen, nearest, nearDi, nearDen, directionList, directionLines
+    global buttonChooseDi, buttonChooseDen, nearest, nearDi, nearDen, directionList, directionLines, checkReset
     buttonChooseDi = buttonChooseDen = 0
+    checkReset = 1
     nearest = nearDi = nearDen = Destinations("init val", 0, 0, "", [], 0)
     directionLines = ""
     directionList = []
@@ -695,184 +696,214 @@ while True:
 
         # mutually dependent comboboxes: Pho -> Des
         case "-ComboPhoDi-":
-            buttonChooseDi = 0
-            index = dicStreet[values["-ComboPhoDi-"]]
-            listDes = []
-            for d in list_pho[index].danh_sach_dia_diem:
-                if "Unknown" not in d.ten_dia_diem:
-                    line = d.ten_dia_diem + ", " + d.address
-                else:
-                    line = d.address
-                listDes.append(line)
-            window["-ComboDiaDiemDi-"].update(values=listDes)
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                buttonChooseDi = 0
+                index = dicStreet[values["-ComboPhoDi-"]]
+                listDes = []
+                for d in list_pho[index].danh_sach_dia_diem:
+                    if "Unknown" not in d.ten_dia_diem:
+                        line = d.ten_dia_diem + ", " + d.address
+                    else:
+                        line = d.address
+                    listDes.append(line)
+                window["-ComboDiaDiemDi-"].update(values=listDes)
             
         case "-ComboPhoDen-":
-            buttonChooseDen = 0
-            index = dicStreet[values["-ComboPhoDen-"]]
-            listDes = []
-            for d in list_pho[index].danh_sach_dia_diem:
-                if "Unknown" not in d.ten_dia_diem:
-                    line = d.ten_dia_diem + ", " + d.address
-                else:
-                    line = d.address
-                listDes.append(line)
-            window["-ComboDiaDiemDen-"].update(values=listDes)
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else: 
+                buttonChooseDen = 0
+                index = dicStreet[values["-ComboPhoDen-"]]
+                listDes = []
+                for d in list_pho[index].danh_sach_dia_diem:
+                    if "Unknown" not in d.ten_dia_diem:
+                        line = d.ten_dia_diem + ", " + d.address
+                    else:
+                        line = d.address
+                    listDes.append(line)
+                window["-ComboDiaDiemDen-"].update(values=listDes)
             
         case "-ComboDiaDiemDi-":
-            buttonChooseDi = 0
-            
-            xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
-            tmp = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
-            graph.draw_circle(tmp, 4, fill_color='blue',
-                          line_color="Blue", line_width=3)
-            graph.draw_circle(tmp, 8, fill_color=None,
-                          line_color="Blue", line_width=3)
-            
-            window["-Direction-"].update("")
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                buttonChooseDi = 0
+                
+                xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
+                tmp = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
+                graph.draw_circle(tmp, 4, fill_color='blue',
+                            line_color="Blue", line_width=3)
+                graph.draw_circle(tmp, 8, fill_color=None,
+                            line_color="Blue", line_width=3)
+                
+                window["-Direction-"].update("")
         case "-ComboDiaDiemDen-":
-            buttonChooseDen = 0
-            
-            dichDen = dicDes[values["-ComboDiaDiemDen-"]]
-            tmp = (dichDen.vi_tri_x, dichDen.vi_tri_y)
-            graph.draw_circle(tmp, 4, fill_color='blue',
-                          line_color='blue', line_width=3)
-            graph.draw_image(filename=markerPath,
-                            location=(tmp[0]-19, tmp[1]+37))
-            
-            window["-Direction-"].update("")
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                buttonChooseDen = 0
+                
+                dichDen = dicDes[values["-ComboDiaDiemDen-"]]
+                tmp = (dichDen.vi_tri_x, dichDen.vi_tri_y)
+                graph.draw_circle(tmp, 4, fill_color='blue',
+                            line_color='blue', line_width=3)
+                graph.draw_image(filename=markerPath,
+                                location=(tmp[0]-19, tmp[1]+37))
+                
+                window["-Direction-"].update("")
 
 
         # Choose on map -> nearDi, nearDen
         case "-ChooseDi-":
-            if (buttonChooseDi == 1 or values["-ComboDiaDiemDi-"] != '') and delMap == 1 :
-                graph.draw_image(
-                    filename=mapPath, location=(0, mapsize))
-                
-            buttonChooseDi = 1
-            delMap = 0
-            window["-ChooseDi-"].update(button_color=('white', 'orange'))
-            
-            window["-ComboPhoDi-"].update('')
-            window["-ComboDiaDiemDi-"].update('')
-            window["-Direction-"].update("")
-            
-            # get coordinate
-            event, values = window.read()
-            window["-ChooseDi-"].update(button_color=('white', 'DarkMagenta'))
-            if event == "-GRAPH-":
-                chDi = values["-GRAPH-"]
-                x1, x2 = chDi[0], chDi[1]
-
-                if in_hang_ma(x1, x2):
-                    # draw start point
-                    graph.draw_circle(
-                        chDi, 4, fill_color='blue', line_color="Blue", line_width=3)
-                    graph.draw_circle(
-                        chDi, 8, fill_color=None, line_color="Blue", line_width=3)
-                    # Des: nearDi
-                    nearDi = nearestDes(x1, x2)
-
-                else:
-                    choose_again()
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
             else:
-                buttonChooseDi = 0
+                if (buttonChooseDi == 1 or values["-ComboDiaDiemDi-"] != '') and delMap == 1 :
+                    graph.draw_image(
+                        filename=mapPath, location=(0, mapsize))
+                    
+                buttonChooseDi = 1
+                delMap = 0
+                window["-ChooseDi-"].update(button_color=('white', 'orange'))
+                
+                window["-ComboPhoDi-"].update('')
+                window["-ComboDiaDiemDi-"].update('')
+                window["-Direction-"].update("")
+                
+                # get coordinate
+                event, values = window.read()
+                window["-ChooseDi-"].update(button_color=('white', 'DarkMagenta'))
+                if event == "-GRAPH-":
+                    chDi = values["-GRAPH-"]
+                    x1, x2 = chDi[0], chDi[1]
+
+                    if in_hang_ma(x1, x2):
+                        # draw start point
+                        graph.draw_circle(
+                            chDi, 4, fill_color='blue', line_color="Blue", line_width=3)
+                        graph.draw_circle(
+                            chDi, 8, fill_color=None, line_color="Blue", line_width=3)
+                        # Des: nearDi
+                        nearDi = nearestDes(x1, x2)
+
+                    else:
+                        choose_again()
+                else:
+                    buttonChooseDi = 0
 
         case "-ChooseDen-":
-            if (buttonChooseDen == 1 or values["-ComboDiaDiemDen-"] != '') and delMap == 1:
-                graph.draw_image(
-                    filename=mapPath, location=(0, mapsize))
-            
-            buttonChooseDen = 1
-            delMap = 0
-            window["-ChooseDen-"].update(button_color=('white', 'orange'))
-
-            window["-ComboPhoDen-"].update('')
-            window["-ComboDiaDiemDen-"].update('')
-            window["-Direction-"].update("")
-            
-            # get coordinate
-            event, values = window.read()
-            window["-ChooseDen-"].update(button_color=('white', 'DarkMagenta'))
-            if event == "-GRAPH-":
-                chDen = values["-GRAPH-"]
-                x1, x2 = chDen[0], chDen[1]
-
-                if in_hang_ma(x1, x2):
-                    # draw end point
-                    graph.draw_circle(
-                        chDen, 4, fill_color='blue', line_color="Blue", line_width=3)
-                    graph.draw_image(filename=markerPath, location=(
-                        chDen[0]-19, chDen[1]+37))
-
-                    # Des: nearDen
-                    nearDen = nearestDes(x1, x2)
-
-                else:
-                    choose_again()
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
             else:
-                buttonChooseDen = 0
+                if (buttonChooseDen == 1 or values["-ComboDiaDiemDen-"] != '') and delMap == 1:
+                    graph.draw_image(
+                        filename=mapPath, location=(0, mapsize))
+                
+                buttonChooseDen = 1
+                delMap = 0
+                window["-ChooseDen-"].update(button_color=('white', 'orange'))
+
+                window["-ComboPhoDen-"].update('')
+                window["-ComboDiaDiemDen-"].update('')
+                window["-Direction-"].update("")
+                
+                # get coordinate
+                event, values = window.read()
+                window["-ChooseDen-"].update(button_color=('white', 'DarkMagenta'))
+                if event == "-GRAPH-":
+                    chDen = values["-GRAPH-"]
+                    x1, x2 = chDen[0], chDen[1]
+
+                    if in_hang_ma(x1, x2):
+                        # draw end point
+                        graph.draw_circle(
+                            chDen, 4, fill_color='blue', line_color="Blue", line_width=3)
+                        graph.draw_image(filename=markerPath, location=(
+                            chDen[0]-19, chDen[1]+37))
+
+                        # Des: nearDen
+                        nearDen = nearestDes(x1, x2)
+
+                    else:
+                        choose_again()
+                else:
+                    buttonChooseDen = 0
 
         case "Tìm đường":
             # No start/end point
-            if values["-ComboDiaDiemDi-"] == '' and buttonChooseDi == 0:
-                sg.popup_ok("Hãy chọn điểm xuất phát!",
-                            title="Chưa chọn địa điểm!", font=("Arial", 12))
-            if values["-ComboDiaDiemDen-"] == '' and buttonChooseDen == 0:
-                sg.popup_ok("Hãy chọn đích đến!",
-                            title="Chưa chọn địa điểm!", font=("Arial", 12))
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                if values["-ComboDiaDiemDi-"] == '' and buttonChooseDi == 0:
+                    sg.popup_ok("Hãy chọn điểm xuất phát!",
+                                title="Chưa chọn địa điểm!", font=("Arial", 12))
+                    continue
+                if values["-ComboDiaDiemDen-"] == '' and buttonChooseDen == 0:
+                    sg.popup_ok("Hãy chọn đích đến!",
+                                title="Chưa chọn địa điểm!", font=("Arial", 12))
+                    continue
 
-            # comboDi, comboDen
-            if values["-ComboDiaDiemDi-"] != '' and values["-ComboDiaDiemDen-"] != '':
-                xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
-                dichDen = dicDes[values["-ComboDiaDiemDen-"]]
+                # comboDi, comboDen
+                if values["-ComboDiaDiemDi-"] != '' and values["-ComboDiaDiemDen-"] != '':
+                    xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
+                    dichDen = dicDes[values["-ComboDiaDiemDen-"]]
 
-                q1 = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
-                q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
+                    q1 = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
+                    q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
 
-                if q1 == q2:
-                    graph.draw_circle(q1, 4, fill_color='blue',
-                                      line_color="Blue", line_width=3)
-                    graph.draw_circle(q1, 8, fill_color=None,
-                                      line_color="Blue", line_width=3)
-                    window["-Direction-"].update("ĐÃ ĐẾN!")
-                else:
-                    draw_way(xuatPhat, dichDen)
-            # chooseDi, chooseDen
-            elif buttonChooseDi == 1 and buttonChooseDen == 1:
-                q1 = (nearDi.vi_tri_x, nearDi.vi_tri_y)
-                q2 = (nearDen.vi_tri_x, nearDen.vi_tri_y)
-                if q1 == q2:
-                    window["-Direction-"].update("Đi bộ là đến!")
-                    draw_dotted_line(
-                        chDi, chDen, 5, 5, 'blue')
-                else:
-                    draw_way(nearDi, nearDen)
-                    
-            # comboDi, chooseDen
-            elif values["-ComboDiaDiemDi-"] != '' and buttonChooseDen == 1:
-                xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
-                q1 = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
-                q2 = (nearDen.vi_tri_x, nearDen.vi_tri_y)
-                if q1 == q2:
-                    window["-Direction-"].update("Đi bộ là đến!")
-                    draw_dotted_line(
-                        q1, chDen, 5, 5, 'blue')
-                else:
-                    draw_way(xuatPhat, nearDen)
-                    
-            # chooseDi, comboDen
-            elif buttonChooseDi == 1 and values["-ComboDiaDiemDen-"] != '':
-                dichDen = dicDes[values["-ComboDiaDiemDen-"]]
-                q1 = (nearDi.vi_tri_x, nearDi.vi_tri_y)
-                q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
-                if q1 == q2:
-                    window["-Direction-"].update("Đi bộ là đến!")
-                    draw_dotted_line(
-                        chDi, q2, 5, 5, 'blue')
-                else:
-                    draw_way(nearDi, dichDen)
-            
-            delMap = 1
+                    if q1 == q2:
+                        graph.draw_circle(q1, 4, fill_color='blue',
+                                        line_color="Blue", line_width=3)
+                        graph.draw_circle(q1, 8, fill_color=None,
+                                        line_color="Blue", line_width=3)
+                        window["-Direction-"].update("ĐÃ ĐẾN!")
+                    else:
+                        draw_way(xuatPhat, dichDen)
+                # chooseDi, chooseDen
+                elif buttonChooseDi == 1 and buttonChooseDen == 1:
+                    q1 = (nearDi.vi_tri_x, nearDi.vi_tri_y)
+                    q2 = (nearDen.vi_tri_x, nearDen.vi_tri_y)
+                    if q1 == q2:
+                        window["-Direction-"].update("Đi bộ là đến!")
+                        draw_dotted_line(
+                            chDi, chDen, 5, 5, 'blue')
+                    else:
+                        draw_way(nearDi, nearDen)
+                        
+                # comboDi, chooseDen
+                elif values["-ComboDiaDiemDi-"] != '' and buttonChooseDen == 1:
+                    xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
+                    q1 = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
+                    q2 = (nearDen.vi_tri_x, nearDen.vi_tri_y)
+                    if q1 == q2:
+                        window["-Direction-"].update("Đi bộ là đến!")
+                        draw_dotted_line(
+                            q1, chDen, 5, 5, 'blue')
+                    else:
+                        draw_way(xuatPhat, nearDen)
+                        
+                # chooseDi, comboDen
+                elif buttonChooseDi == 1 and values["-ComboDiaDiemDen-"] != '':
+                    dichDen = dicDes[values["-ComboDiaDiemDen-"]]
+                    q1 = (nearDi.vi_tri_x, nearDi.vi_tri_y)
+                    q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
+                    if q1 == q2:
+                        window["-Direction-"].update("Đi bộ là đến!")
+                        draw_dotted_line(
+                            chDi, q2, 5, 5, 'blue')
+                    else:
+                        draw_way(nearDi, dichDen)
+                
+                checkReset = 0
 
         case "Reset":
             reset()
