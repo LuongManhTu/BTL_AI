@@ -11,12 +11,9 @@ import time
 import math
 
 
-# Set up: line 16
-# Functions: line 104
-# Event handler: line 625
-
-
 ##################         Set up           ###################
+
+
 # variables
 sg.set_options(font=("Arial Bold", 10))
 mapsize = 750
@@ -24,11 +21,10 @@ markersize = 40
 rate = mapsize / float(2928)
 # initial values
 buttonChooseDi = buttonChooseDen = 0
-delMap = 1
+checkReset = 1
 nearest = nearDi = nearDen = Destinations("Rỗng", 0, 0, "", [], 0)
 chDi = chDen = (0, 0)
 # direction box
-# global directionLines, directionList
 directionList = []
 directionLines = ""
 
@@ -37,7 +33,7 @@ directionLines = ""
 mapPath = "BTL AI\\Pics\\resized.png"
 markerPath = "BTL AI\\Pics\\resized_marker.png"
 
-img = Image.open("BTL AI\\Pics\\HANGMA_GUIcopy.png")
+img = Image.open("BTL AI\\Pics\\Map HangMa.png")
 imm = img.resize((mapsize, mapsize))
 imm.save(mapPath)
 
@@ -148,8 +144,9 @@ def d8(p):  # inside < 0
 # reset everything
 def reset():
     # reset variables
-    global buttonChooseDi, buttonChooseDen, nearest, nearDi, nearDen, directionList, directionLines
+    global buttonChooseDi, buttonChooseDen, nearest, nearDi, nearDen, directionList, directionLines, checkReset
     buttonChooseDi = buttonChooseDen = 0
+    checkReset = 1
     nearest = nearDi = nearDen = Destinations("init val", 0, 0, "", [], 0)
     directionLines = ""
     directionList = []
@@ -196,7 +193,7 @@ def orientation(A, B, C):
     dot_product = v1[0] * v2[0] + v1[1] * v2[1]
     cos_angle = dot_product / (length1 * length2)
     angle = math.acos(cos_angle)*180/(math.pi)
-    if 35 < angle < 170:
+    if 28 < angle < 170:
         cross_product = v1[0] * v2[1] - v1[1] * v2[0]
         if cross_product > 0:
             return 1
@@ -207,7 +204,7 @@ def orientation(A, B, C):
         
         
 # find ten_phos of node     
-def lay_duong( vv):
+def lay_duong(vv):
     ppp = vv.danh_sach_duong
     l = ""
     for i in range(len(ppp)):
@@ -218,7 +215,6 @@ def lay_duong( vv):
 # draw a single line
 def ve(path, dsn, mtdk,directionLines):
     i=0
-    
     # 0 - 2
     if path[i] == 0 and path[i+1] == 2:
        directionLines= draw_0_2(directionLines)
@@ -233,12 +229,19 @@ def ve(path, dsn, mtdk,directionLines):
     # ngo 8 LND
     elif mtdk[path[i]][path[i+1]] == 15 and ((dsn[path[i]].ten_dinh_nut == 4 and dsn[path[i+1]].vi_tri_x == round(755*rate)) or (dsn[path[i+1]].ten_dinh_nut == 4 and dsn[path[i]].vi_tri_x == round(755*rate))):
         drawNgo8(dsn[path[i]], dsn[path[i+1]])
-        
+    
+    # no car
+    # pho Gam Cau, pho Hang Chai, pho Cong Duc, ngo 4 LND, ngo 12B LND, ngo 12A LND, ngo Hang Huong
+    elif mtdk[path[i]][path[i+1]] == 3 or mtdk[path[i]][path[i+1]] == 8 or mtdk[path[i]][path[i+1]] == 11 or mtdk[path[i]][path[i+1]] == 14 or mtdk[path[i]][path[i+1]] == 15 or mtdk[path[i]][path[i+1]] == 16 or mtdk[path[i]][path[i+1]] == 17 or mtdk[path[i]][path[i+1]] == 18:
+        des1 = (dsn[path[i]].vi_tri_x, dsn[path[i]].vi_tri_y)
+        des2 = (dsn[path[i+1]].vi_tri_x, dsn[path[i+1]].vi_tri_y)
+        graph.draw_line(des1, des2, color="black", width=3)
+    
     # normal edges
     else:
         des1 = (dsn[path[i]].vi_tri_x, dsn[path[i]].vi_tri_y)
         des2 = (dsn[path[i+1]].vi_tri_x, dsn[path[i+1]].vi_tri_y)
-        graph.draw_line(des1, des2, color="blue", width=4)
+        graph.draw_line(des1, des2, color="blue", width=5)
 
     return directionLines
 
@@ -263,16 +266,12 @@ def draw_way(xuatPhat, dichDen):
                           line_color="Blue", line_width=3)
         graph.draw_circle(p1, 8, fill_color=None,
                           line_color="Blue", line_width=3)
-        window.refresh()
-        time.sleep(1)
     # comboDi, chooseDen
     if buttonChooseDi == 0 and buttonChooseDen == 1:
         graph.draw_circle(p1, 4, fill_color='blue',
                           line_color="Blue", line_width=3)
         graph.draw_circle(p1, 8, fill_color=None,
                           line_color="Blue", line_width=3)
-        window.refresh()
-        time.sleep(1)
     # chooseDi, comboDen
     if buttonChooseDi == 1 and buttonChooseDen == 0:
         draw_dotted_line(chDi, q1, 5, 5, 'blue')
@@ -394,19 +393,19 @@ def draw_way(xuatPhat, dichDen):
             if i<len(p)-1:
                 if(p[i][2]==3):
                     ve((p[i][0],p[i][1]),dsn,mtdk,li)
-                    li += "ngã rẽ "+ lay_duong(dsn[0])+"phố Hàng Đậu \n"
+                    li += "ngã rẽ "+ lay_duong(dsn[0])+", Phố Hàng Đậu \n"
                     window["-Direction-"].update(li)
                     # Neu di tu Hang Cot len
                     if mtdk[p[i][0]][p[i][1]]==2:
                         li += "- Rẽ phải vào phố Hàng Đậu\n"
                         window["-Direction-"].update(li)
                         
-                        window.refresh()
-                        time.sleep(1)
-                        
                         whitep = (dsn[p[i][1]].vi_tri_x, dsn[p[i][1]].vi_tri_y)
                         graph.draw_circle(whitep, 4, fill_color='blue',
                                           line_color='blue', line_width=3)
+                        
+                        window.refresh()
+                        time.sleep(1)
                         
                         li += "- Đi thẳng phố Hàng Đậu đến ngã rẽ phố Hàng Than phố Hàng Đậu\n"
                         li = ve((p[i+1][0],p[i+1][1]), dsn, mtdk, li)
@@ -415,14 +414,14 @@ def draw_way(xuatPhat, dichDen):
                             li += "- Đi thẳng phố Phan Đình Phùng đến ngã rẽ phố Lý Nam Đế phố Phan Đình Phùng\n" 
                             li += "- Rẽ phải vào phố Lý Nam Đế \n"
                             window["-Direction-"].update(li)
-                            
-                            window.refresh()
-                            time.sleep(1)
-                            
+       
                             whitep = (dsn[p[i+2][0]].vi_tri_x,
                                       dsn[p[i+2][0]].vi_tri_y)
                             graph.draw_circle(whitep, 4, fill_color='blue',
                                               line_color='blue', line_width=3)
+                            
+                            window.refresh()
+                            time.sleep(1)
                             
                     else:
                         window.refresh()
@@ -434,14 +433,15 @@ def draw_way(xuatPhat, dichDen):
                             li += "- Đi thẳng phố Phan Đình Phùng đến ngã rẽ phố Lý Nam Đế phố Phan Đình Phùng\n" 
                             li += "- Rẽ phải vào phố Lý Nam Đế \n"
                             window["-Direction-"].update(li)
-                            
-                            window.refresh()
-                            time.sleep(1)
-                            
+
                             whitep = (dsn[p[i+2][0]].vi_tri_x,
                                       dsn[p[i+2][0]].vi_tri_y)
                             graph.draw_circle(whitep, 4, fill_color='blue',
                                               line_color='blue', line_width=3)
+                            
+                            window.refresh()
+                            time.sleep(1)
+
                 elif(p[i][2]!=0):
                     ve((p[i][0],p[i][1]),dsn,mtdk,li)
                     li += "ngã rẽ "+ lay_duong(dsn[p[i][1]])+"\n"
@@ -450,23 +450,25 @@ def draw_way(xuatPhat, dichDen):
                     else: 
                         li += "- Rẽ phải vào " +list_pho[mtdk[p[i+1][0]][p[i+1][1]]].ten_pho +  "\n"
                     window["-Direction-"].update(li)
-                    window.refresh()
-                    time.sleep(1)
                     
                     whitep = (dsn[p[i+1][0]].vi_tri_x, dsn[p[i+1][0]].vi_tri_y)
-                    graph.draw_circle(whitep, 4, fill_color='blue',
-                                          line_color='blue', line_width=3)
+                    graph.draw_circle(whitep, 4, fill_color='blue', line_color='blue', line_width=3)
+                    
+                    window.refresh()
+                    time.sleep(1)
+                            
                 else:
                     ve((p[i][0],p[i][1]),dsn,mtdk,li)
                     li += "ngã rẽ "+ lay_duong(dsn[p[i][1]])+"\n"
                     li += "- Đi thẳng vào " +list_pho[mtdk[p[i+1][0]][p[i+1][1]]].ten_pho +  "\n"
                     window["-Direction-"].update(li)
-                    window.refresh()
-                    time.sleep(1)
                     
                     whitep = (dsn[p[i+1][0]].vi_tri_x, dsn[p[i+1][0]].vi_tri_y)
-                    graph.draw_circle(whitep, 4, fill_color='blue',
-                                          line_color='blue', line_width=3)
+                    graph.draw_circle(whitep, 4, fill_color='blue', line_color='blue', line_width=3)
+             
+                    window.refresh()
+                    time.sleep(1)
+                            
 
         i +=1
     
@@ -476,6 +478,9 @@ def draw_way(xuatPhat, dichDen):
     if(p[i-1][2]!=0 or mtdk[p[i][0]][p[i][1]] != mtdk[p[i-1][0]][p[i-1][1]]): li += "- Đi thẳng " + list_pho[mtdk[p[i][0]][p[i][1]]].ten_pho +" đến "
     li +=  dichDen.address
     window["-Direction-"].update(li)
+    whitep = (dichDen.vi_tri_x, dichDen.vi_tri_y)
+    graph.draw_circle(whitep, 4, fill_color='blue',
+                      line_color='blue', line_width=3)
     window.refresh()
     time.sleep(1)
     directionLines = li+"\n"
@@ -528,56 +533,66 @@ def draw_way(xuatPhat, dichDen):
 # draw curved path        
 def draw_0_2(directionLines):
     graph.draw_line((1670*rate, mapsize - 425*rate),
-                    (1930*rate, mapsize - 355*rate), color="blue", width=4)
-    directionLines +="Rẽ trái vào phố Hàng Than\n"
+                    (1930*rate, mapsize - 355*rate), color="blue", width=5)
+    directionLines +="- Rẽ trái vào phố Hàng Than\n"
     window["-Direction-"].update(directionLines)
+    
+    whitep = (1930*rate, mapsize - 355*rate)
+    graph.draw_circle(whitep, 4, fill_color='blue',
+                      line_color='blue', line_width=3)
+    
     window.refresh()
     time.sleep(1)
     
     graph.draw_line((1930*rate, mapsize - 355*rate),
-                    (1880*rate, mapsize - 210*rate), color="blue", width=4)
-    directionLines += "Đi thẳng phố Hàng Than đến ngã rẽ phố Quán Thánh phố Hàng Than\n" +"Rẽ trái vào phố Quán Thánh\n"
+                    (1880*rate, mapsize - 210*rate), color="blue", width=5)
+    directionLines += "- Đi thẳng phố Hàng Than đến ngã rẽ phố Quán Thánh phố Hàng Than\n" +"- Rẽ trái vào phố Quán Thánh\n"
     window["-Direction-"].update(directionLines)
-    whitep = (1930*rate, mapsize - 355*rate)
+    
+    whitep = (1880*rate, mapsize - 210*rate)
     graph.draw_circle(whitep, 4, fill_color='blue',
-                line_color='blue', line_width=3)
+                      line_color='blue', line_width=3)
+    
     window.refresh()
     time.sleep(1)
     
     graph.draw_line((1880*rate, mapsize - 210*rate),
-                    (1677*rate, mapsize - 216*rate), color="blue", width=4)
+                    (1677*rate, mapsize - 216*rate), color="blue", width=5)
     graph.draw_line((1677*rate, mapsize - 216*rate), (915*rate,
-                    mapsize - 125*rate), color="blue", width=4)
-    directionLines +="Đi thẳng phố Quán Thánh đến ngã rẽ phố Hòe Nhai phố Quán Thánh\n" +"Rẽ trái vào phố Hòe Nhai\n"
+                    mapsize - 125*rate), color="blue", width=5)
+    directionLines +="- Đi thẳng phố Quán Thánh đến ngã rẽ phố Hòe Nhai phố Quán Thánh\n" +"- Rẽ trái vào phố Hòe Nhai\n"
     window["-Direction-"].update(directionLines)
-    whitep = (1880*rate, mapsize - 210*rate)
+
+    whitep = (915*rate, mapsize - 125*rate)
     graph.draw_circle(whitep, 4, fill_color='blue',
                       line_color='blue', line_width=3)
+
     window.refresh()
     time.sleep(1)
     
     graph.draw_line((915*rate, mapsize - 125*rate), (845*rate,
-                    mapsize - 345*rate), color="blue", width=4)
-    directionLines +="Đi thẳng phố Hòe Nhai đến ngã rẽ phố Phan Đình Phùng phố Hòe Nhai\n" +"Rẽ trái vào phố Phan Đình Phùng\n"
+                    mapsize - 345*rate), color="blue", width=5)
+    directionLines +="- Đi thẳng phố Hòe Nhai đến ngã rẽ phố Phan Đình Phùng phố Hòe Nhai\n" +"- Rẽ trái vào phố Phan Đình Phùng\n"
     window["-Direction-"].update(directionLines)
-    whitep = (915*rate, mapsize - 125*rate)
+    
+    whitep = (845*rate, mapsize - 345*rate)
     graph.draw_circle(whitep, 4, fill_color='blue',
                       line_color='blue', line_width=3)
+    
     window.refresh()
     time.sleep(1)
     
     graph.draw_line((845*rate, mapsize - 345*rate), (1110*rate,
-                    mapsize - 400*rate), color="blue", width=4)
-    whitep = (845*rate, mapsize - 345*rate)
-    graph.draw_circle(whitep, 4, fill_color='blue',
-                      line_color='blue', line_width=3)
+                    mapsize - 400*rate), color="blue", width=5)
+    
     return directionLines
 
 
+# no car
 def drawNgo8(X1, X2):
     p = changeCoor(890, 921)
-    graph.draw_line((X1.vi_tri_x, X1.vi_tri_y), p, color="blue", width=4)
-    graph.draw_line(p, (X2.vi_tri_x, X2.vi_tri_y), color="blue", width=4)
+    graph.draw_line((X1.vi_tri_x, X1.vi_tri_y), p, color="black", width=3)
+    graph.draw_line(p, (X2.vi_tri_x, X2.vi_tri_y), color="black", width=3)
 
 
 def draw_5_9(X1, X2): # y-coordinate decreasing
@@ -598,23 +613,23 @@ def draw_5_9(X1, X2): # y-coordinate decreasing
 
     if X1.ten_dinh_nut == 5 and X2.ten_dinh_nut == 9:
         for i in range(len(data59)-1):
-            graph.draw_line(data59[i], data59[i+1], color='blue', width=4)
+            graph.draw_line(data59[i], data59[i+1], color='blue', width=5)
     elif X1.ten_dinh_nut == 5:
         i = len(data59) - 1
         while (data59[i][1] < X2.vi_tri_y):
             i -= 1
         for j in range(i):
-            graph.draw_line(data59[j], data59[j+1], color='blue', width=4)
+            graph.draw_line(data59[j], data59[j+1], color='blue', width=5)
         graph.draw_line(
-            data59[i], (X2.vi_tri_x, X2.vi_tri_y), color='blue', width=4)
+            data59[i], (X2.vi_tri_x, X2.vi_tri_y), color='blue', width=5)
     elif X2.ten_dinh_nut == 9:
         i = 0
         while (data59[i][1] > X1.vi_tri_y):
             i += 1
         graph.draw_line((X1.vi_tri_x, X1.vi_tri_y),
-                        data59[i], color='blue', width=4)
+                        data59[i], color='blue', width=5)
         for j in range(i, len(data59)-1):
-            graph.draw_line(data59[j], data59[j+1], color='blue', width=4)
+            graph.draw_line(data59[j], data59[j+1], color='blue', width=5)
     else:
         i = 0
         while (data59[i][1] > X1.vi_tri_y):
@@ -624,11 +639,11 @@ def draw_5_9(X1, X2): # y-coordinate decreasing
             j -= 1
 
         graph.draw_line((X1.vi_tri_x, X1.vi_tri_y),
-                        data59[i], color='blue', width=4)
+                        data59[i], color='blue', width=5)
         for k in range(i, j):
-            graph.draw_line(data59[k], data59[k+1], color='blue', width=4)
+            graph.draw_line(data59[k], data59[k+1], color='blue', width=5)
         graph.draw_line(
-            data59[j], (X2.vi_tri_x, X2.vi_tri_y), color='blue', width=4)
+            data59[j], (X2.vi_tri_x, X2.vi_tri_y), color='blue', width=5)
 
 
 # draw dotted line
@@ -670,6 +685,8 @@ def nearestDes(x1, x2):
 
 
 ##################         Event handler          ###################
+
+
 while True:
     event, values = window.read()
     # print(event, values)
@@ -679,172 +696,214 @@ while True:
 
         # mutually dependent comboboxes: Pho -> Des
         case "-ComboPhoDi-":
-            # graph.draw_image(
-            #         filename=mapPath, location=(0, mapsize))
-            buttonChooseDi = 0
-            index = dicStreet[values["-ComboPhoDi-"]]
-            listDes = []
-            for d in list_pho[index].danh_sach_dia_diem:
-                if "Unknown" not in d.ten_dia_diem:
-                    line = d.ten_dia_diem + ", " + d.address
-                else:
-                    line = d.address
-                listDes.append(line)
-            window["-ComboDiaDiemDi-"].update(values=listDes)
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                buttonChooseDi = 0
+                index = dicStreet[values["-ComboPhoDi-"]]
+                listDes = []
+                for d in list_pho[index].danh_sach_dia_diem:
+                    if "Unknown" not in d.ten_dia_diem:
+                        line = d.ten_dia_diem + ", " + d.address
+                    else:
+                        line = d.address
+                    listDes.append(line)
+                window["-ComboDiaDiemDi-"].update(values=listDes)
             
         case "-ComboPhoDen-":
-            # graph.draw_image(
-            #     filename=mapPath, location=(0, mapsize))
-            buttonChooseDen = 0
-            index = dicStreet[values["-ComboPhoDen-"]]
-            listDes = []
-            for d in list_pho[index].danh_sach_dia_diem:
-                if "Unknown" not in d.ten_dia_diem:
-                    line = d.ten_dia_diem + ", " + d.address
-                else:
-                    line = d.address
-                listDes.append(line)
-            window["-ComboDiaDiemDen-"].update(values=listDes)
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else: 
+                buttonChooseDen = 0
+                index = dicStreet[values["-ComboPhoDen-"]]
+                listDes = []
+                for d in list_pho[index].danh_sach_dia_diem:
+                    if "Unknown" not in d.ten_dia_diem:
+                        line = d.ten_dia_diem + ", " + d.address
+                    else:
+                        line = d.address
+                    listDes.append(line)
+                window["-ComboDiaDiemDen-"].update(values=listDes)
             
         case "-ComboDiaDiemDi-":
-            # graph.draw_image(
-            #     filename=mapPath, location=(0, mapsize))
-            buttonChooseDi = 0
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                buttonChooseDi = 0
+                
+                xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
+                tmp = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
+                graph.draw_circle(tmp, 4, fill_color='blue',
+                            line_color="Blue", line_width=3)
+                graph.draw_circle(tmp, 8, fill_color=None,
+                            line_color="Blue", line_width=3)
+                
+                window["-Direction-"].update("")
         case "-ComboDiaDiemDen-":
-
-            # graph.draw_image(
-            #     filename=mapPath, location=(0, mapsize))
-            buttonChooseDen = 0
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                buttonChooseDen = 0
+                
+                dichDen = dicDes[values["-ComboDiaDiemDen-"]]
+                tmp = (dichDen.vi_tri_x, dichDen.vi_tri_y)
+                graph.draw_circle(tmp, 4, fill_color='blue',
+                            line_color='blue', line_width=3)
+                graph.draw_image(filename=markerPath,
+                                location=(tmp[0]-19, tmp[1]+37))
+                
+                window["-Direction-"].update("")
 
 
         # Choose on map -> nearDi, nearDen
         case "-ChooseDi-":
-            if (buttonChooseDi == 1 or values["-ComboDiaDiemDi-"] != '') and delMap == 1 :
-                graph.draw_image(
-                    filename=mapPath, location=(0, mapsize))
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                if (buttonChooseDi == 1 or values["-ComboDiaDiemDi-"] != '') and delMap == 1 :
+                    graph.draw_image(
+                        filename=mapPath, location=(0, mapsize))
+                    
+                buttonChooseDi = 1
+                delMap = 0
+                window["-ChooseDi-"].update(button_color=('white', 'orange'))
+                
                 window["-ComboPhoDi-"].update('')
                 window["-ComboDiaDiemDi-"].update('')
+                window["-Direction-"].update("")
                 
-            buttonChooseDi = 1
-            delMap = 1
-            window["-ChooseDi-"].update(button_color=('white', 'orange'))
+                # get coordinate
+                event, values = window.read()
+                window["-ChooseDi-"].update(button_color=('white', 'DarkMagenta'))
+                if event == "-GRAPH-":
+                    chDi = values["-GRAPH-"]
+                    x1, x2 = chDi[0], chDi[1]
 
-            # get coordinate
-            event, values = window.read()
-            window["-ChooseDi-"].update(button_color=('white', 'DarkMagenta'))
-            if event == "-GRAPH-":
-                chDi = values["-GRAPH-"]
-                x1, x2 = chDi[0], chDi[1]
+                    if in_hang_ma(x1, x2):
+                        # draw start point
+                        graph.draw_circle(
+                            chDi, 4, fill_color='blue', line_color="Blue", line_width=3)
+                        graph.draw_circle(
+                            chDi, 8, fill_color=None, line_color="Blue", line_width=3)
+                        # Des: nearDi
+                        nearDi = nearestDes(x1, x2)
 
-                if in_hang_ma(x1, x2):
-                    # draw start point
-                    graph.draw_circle(
-                        chDi, 4, fill_color='blue', line_color="Blue", line_width=3)
-                    graph.draw_circle(
-                        chDi, 8, fill_color=None, line_color="Blue", line_width=3)
-                    # Des: nearDi
-                    nearDi = nearestDes(x1, x2)
-
+                    else:
+                        choose_again()
                 else:
-                    choose_again()
-            else:
-                buttonChooseDi = 0
+                    buttonChooseDi = 0
 
         case "-ChooseDen-":
-            if (buttonChooseDen == 1 or values["-ComboDiaDiemDen-"] != '') and delMap == 1:
-                graph.draw_image(
-                    filename=mapPath, location=(0, mapsize))
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                if (buttonChooseDen == 1 or values["-ComboDiaDiemDen-"] != '') and delMap == 1:
+                    graph.draw_image(
+                        filename=mapPath, location=(0, mapsize))
+                
+                buttonChooseDen = 1
+                delMap = 0
+                window["-ChooseDen-"].update(button_color=('white', 'orange'))
+
                 window["-ComboPhoDen-"].update('')
                 window["-ComboDiaDiemDen-"].update('')
-            
-            buttonChooseDen = 1
-            delMap = 1
-            window["-ChooseDen-"].update(button_color=('white', 'orange'))
+                window["-Direction-"].update("")
+                
+                # get coordinate
+                event, values = window.read()
+                window["-ChooseDen-"].update(button_color=('white', 'DarkMagenta'))
+                if event == "-GRAPH-":
+                    chDen = values["-GRAPH-"]
+                    x1, x2 = chDen[0], chDen[1]
 
-            # get coordinate
-            event, values = window.read()
-            window["-ChooseDen-"].update(button_color=('white', 'DarkMagenta'))
-            if event == "-GRAPH-":
-                chDen = values["-GRAPH-"]
-                x1, x2 = chDen[0], chDen[1]
+                    if in_hang_ma(x1, x2):
+                        # draw end point
+                        graph.draw_circle(
+                            chDen, 4, fill_color='blue', line_color="Blue", line_width=3)
+                        graph.draw_image(filename=markerPath, location=(
+                            chDen[0]-19, chDen[1]+37))
 
-                if in_hang_ma(x1, x2):
-                    # draw end point
-                    graph.draw_circle(
-                        chDen, 4, fill_color='blue', line_color="Blue", line_width=3)
-                    graph.draw_image(filename=markerPath, location=(
-                        chDen[0]-19, chDen[1]+37))
+                        # Des: nearDen
+                        nearDen = nearestDes(x1, x2)
 
-                    # Des: nearDen
-                    nearDen = nearestDes(x1, x2)
-
+                    else:
+                        choose_again()
                 else:
-                    choose_again()
-            else:
-                buttonChooseDen = 0
+                    buttonChooseDen = 0
 
         case "Tìm đường":
             # No start/end point
-            if values["-ComboDiaDiemDi-"] == '' and buttonChooseDi == 0:
-                sg.popup_ok("Hãy chọn điểm xuất phát!",
-                            title="Chưa chọn địa điểm!", font=("Arial", 12))
-            if values["-ComboDiaDiemDen-"] == '' and buttonChooseDen == 0:
-                sg.popup_ok("Hãy chọn đích đến!",
-                            title="Chưa chọn địa điểm!", font=("Arial", 12))
+            if checkReset == 0:
+                sg.popup_ok("Hãy chọn Reset để khôi phục bản đồ",
+                            title="Reset!", font=("Arial", 12))
+            else:
+                if values["-ComboDiaDiemDi-"] == '' and buttonChooseDi == 0:
+                    sg.popup_ok("Hãy chọn điểm xuất phát!",
+                                title="Chưa chọn địa điểm!", font=("Arial", 12))
+                    continue
+                if values["-ComboDiaDiemDen-"] == '' and buttonChooseDen == 0:
+                    sg.popup_ok("Hãy chọn đích đến!",
+                                title="Chưa chọn địa điểm!", font=("Arial", 12))
+                    continue
 
-            # comboDi, comboDen
-            if values["-ComboDiaDiemDi-"] != '' and values["-ComboDiaDiemDen-"] != '':
-                xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
-                dichDen = dicDes[values["-ComboDiaDiemDen-"]]
+                # comboDi, comboDen
+                if values["-ComboDiaDiemDi-"] != '' and values["-ComboDiaDiemDen-"] != '':
+                    xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
+                    dichDen = dicDes[values["-ComboDiaDiemDen-"]]
 
-                q1 = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
-                q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
+                    q1 = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
+                    q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
 
-                if q1 == q2:
-                    graph.draw_circle(q1, 4, fill_color='blue',
-                                      line_color="Blue", line_width=3)
-                    graph.draw_circle(q1, 8, fill_color=None,
-                                      line_color="Blue", line_width=3)
-                    window["-Direction-"].update("ĐÃ ĐẾN!")
-                else:
-                    draw_way(xuatPhat, dichDen)
-            # chooseDi, chooseDen
-            elif buttonChooseDi == 1 and buttonChooseDen == 1:
-                q1 = (nearDi.vi_tri_x, nearDi.vi_tri_y)
-                q2 = (nearDen.vi_tri_x, nearDen.vi_tri_y)
-                if q1 == q2:
-                    window["-Direction-"].update("Đi bộ là đến!")
-                    draw_dotted_line(
-                        chDi, chDen, 5, 5, 'blue')
-                else:
-                    draw_way(nearDi, nearDen)
-                    
-            # comboDi, chooseDen
-            elif values["-ComboDiaDiemDi-"] != '' and buttonChooseDen == 1:
-                xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
-                q1 = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
-                q2 = (nearDen.vi_tri_x, nearDen.vi_tri_y)
-                if q1 == q2:
-                    window["-Direction-"].update("Đi bộ là đến!")
-                    draw_dotted_line(
-                        q1, chDen, 5, 5, 'blue')
-                else:
-                    draw_way(xuatPhat, nearDen)
-                    
-            # chooseDi, comboDen
-            elif buttonChooseDi == 1 and values["-ComboDiaDiemDen-"] != '':
-                dichDen = dicDes[values["-ComboDiaDiemDen-"]]
-                q1 = (nearDi.vi_tri_x, nearDi.vi_tri_y)
-                q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
-                if q1 == q2:
-                    window["-Direction-"].update("Đi bộ là đến!")
-                    draw_dotted_line(
-                        chDi, q2, 5, 5, 'blue')
-                else:
-                    draw_way(nearDi, dichDen)
-            
-            # buttonChooseDi = buttonChooseDen = 0
-            delMap = 1
+                    if q1 == q2:
+                        graph.draw_circle(q1, 4, fill_color='blue',
+                                        line_color="Blue", line_width=3)
+                        graph.draw_circle(q1, 8, fill_color=None,
+                                        line_color="Blue", line_width=3)
+                        window["-Direction-"].update("ĐÃ ĐẾN!")
+                    else:
+                        draw_way(xuatPhat, dichDen)
+                # chooseDi, chooseDen
+                elif buttonChooseDi == 1 and buttonChooseDen == 1:
+                    q1 = (nearDi.vi_tri_x, nearDi.vi_tri_y)
+                    q2 = (nearDen.vi_tri_x, nearDen.vi_tri_y)
+                    if q1 == q2:
+                        window["-Direction-"].update("Đi bộ là đến!")
+                        draw_dotted_line(
+                            chDi, chDen, 5, 5, 'blue')
+                    else:
+                        draw_way(nearDi, nearDen)
+                        
+                # comboDi, chooseDen
+                elif values["-ComboDiaDiemDi-"] != '' and buttonChooseDen == 1:
+                    xuatPhat = dicDes[values["-ComboDiaDiemDi-"]]
+                    q1 = (xuatPhat.vi_tri_x, xuatPhat.vi_tri_y)
+                    q2 = (nearDen.vi_tri_x, nearDen.vi_tri_y)
+                    if q1 == q2:
+                        window["-Direction-"].update("Đi bộ là đến!")
+                        draw_dotted_line(
+                            q1, chDen, 5, 5, 'blue')
+                    else:
+                        draw_way(xuatPhat, nearDen)
+                        
+                # chooseDi, comboDen
+                elif buttonChooseDi == 1 and values["-ComboDiaDiemDen-"] != '':
+                    dichDen = dicDes[values["-ComboDiaDiemDen-"]]
+                    q1 = (nearDi.vi_tri_x, nearDi.vi_tri_y)
+                    q2 = (dichDen.vi_tri_x, dichDen.vi_tri_y)
+                    if q1 == q2:
+                        window["-Direction-"].update("Đi bộ là đến!")
+                        draw_dotted_line(
+                            chDi, q2, 5, 5, 'blue')
+                    else:
+                        draw_way(nearDi, dichDen)
+                
+                checkReset = 0
 
         case "Reset":
             reset()
