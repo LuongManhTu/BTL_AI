@@ -71,16 +71,16 @@ col_1 = [
 col_2 = [
         [sg.Text(text='Xuất phát', size=(8, 0)),
          sg.Combo(values=itemsPho, size=(20, 5),
-                  key="-ComboPhoDi-", enable_events=True),
-         sg.Combo(values=itemsDiaDiemFull, size=(40, 5), key="-ComboDiaDiemDi-", enable_events=True)],
+                  key="-ComboPhoDi-", enable_events=True, readonly=True),
+         sg.Combo(values=itemsDiaDiemFull, size=(40, 5), key="-ComboDiaDiemDi-", enable_events=True, readonly=True)],
 
         [sg.Text("", size=(8, 2)), sg.Button("Chọn trên bản đồ",
                                              key="-ChooseDi-", button_color=('white', 'DarkMagenta'))],
 
         [sg.Text(text='Điểm đến', size=(8, 0)),
          sg.Combo(values=itemsPho, size=(20, 5),
-                  key="-ComboPhoDen-", enable_events=True),
-         sg.Combo(values=itemsDiaDiemFull, size=(40, 5), key="-ComboDiaDiemDen-", enable_events=True)],
+                  key="-ComboPhoDen-", enable_events=True, readonly=True),
+         sg.Combo(values=itemsDiaDiemFull, size=(40, 5), key="-ComboDiaDiemDen-", enable_events=True, readonly=True)],
 
         [sg.Text("", size=(8, 2)), sg.Button("Chọn trên bản đồ",
                                              key="-ChooseDen-", button_color=('white', 'DarkMagenta'))],
@@ -89,7 +89,7 @@ col_2 = [
          sg.Button("Tìm đường", size=(19, 0))],
 
         [sg.Text("Chỉ dẫn:", size=(8, 2)), sg.Multiline(
-            "", size=(64, 15), key='-Direction-')]
+            "", size=(64, 20), key='-Direction-', disabled=True)]
 ]
 
 layout = [
@@ -106,6 +106,7 @@ image = graph.draw_image(filename=mapPath, location=(0, mapsize))
 
 
 ##################         Functions          ###################
+
 
 # change coordinate
 def changeCoor(x1, x2):
